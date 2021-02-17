@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { StyleSheet, Text, View ,Dimensions, Button,TouchableOpacity, Alert, TextInput} from 'react-native';
+import { StyleSheet, Text, View ,KeyboardAvoidingView, Platform,Dimensions, Button,TouchableOpacity, Alert, TextInput} from 'react-native';
 import * as Permissions from 'expo-permissions';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 
@@ -7,27 +7,36 @@ const DEVICE_WIDTH =Dimensions.get('window').width;
 const DEVICE_HEIGHT= Dimensions.get('window').height;
 import { useNavigation } from '@react-navigation/native';
 
-
+ 
+ 
 export default class List extends React.Component{
     state ={
+     
       CameraPermissionGranted: null,
     }
+    // navigation = useNavigation();
     async componentDidMount(){
       const {status} =await Permissions.askAsync(Permissions.CAMERA);
       this.setState({CameraPermissionGranted: status ==="granted"? true : false});
     }
     barCodeScanned = ({ data }) => {
+      // navigation.navigate("Cart");
       alert(data);
+      
     
     }
+  
+
     render(){
       const {CameraPermissionGranted} = this.state;
       if(CameraPermissionGranted === null){
         return(
+          
+    
+    
           <View style={styles.container}>
             <Text>Please grant Camera Permission</Text>
           </View>
-  
         );
       }
       if(CameraPermissionGranted === false){
@@ -35,18 +44,24 @@ export default class List extends React.Component{
           <View style={styles.container}>
             <Text>Camera Permission Denied</Text>
           </View>
+         
         );
       }
       if(CameraPermissionGranted === true){
         return(
+         
           <View style = {{
             flex:1,
             justifyContent:'center',
             alignItems:'center',
             backgroundColor: '#192531',
-          }}>
+          }}> 
                   <View>
             <Text style={styles.header}>Scan BarCode of Products you want!</Text>
+            <View style={styles.oneline}>
+          <Text  style={styles.lbl}>Purchase Quantity</Text>
+          <TextInput placeholder="Quantity" id="qty" style={styles.txt}></TextInput>
+          </View>
           </View>
             <BarCodeScanner
             onBarCodeScanned = {this.barCodeScanned}
@@ -55,17 +70,17 @@ export default class List extends React.Component{
               width: DEVICE_WIDTH,
             }}
             ></BarCodeScanner>
-            <View style={styles.oneline}>
-            <Text  style={styles.lbl}>Purchase Quantity</Text>
-            <TextInput placeholder="Quantity" id="qty" style={styles.txt}></TextInput>
-            </View>
+           
             <TouchableOpacity style={styles.btn}>
             <Button title="Add to Cart" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.btn}>
-            <Button title="Finish Buying" />
+            <Button title="Finish Buying"/>
             </TouchableOpacity>
           </View>
+          
+         
+  
         );
   
       }

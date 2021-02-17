@@ -1,25 +1,31 @@
 import React from 'react';
 import { Text, View, Button ,StyleSheet} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useRoute } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 export default function Home() {
     
     const navigation = useNavigation();
-
+const route= useRoute();
     function gotodash() {
         navigation.navigate("Dashboard");
     }
     function navigateToList() {
         navigation.navigate("List");
     }
-    
-    
+    function Logout() {
+      navigation.navigate("Login");
+  }
+  
+ 
     return (
+      
             
     <View style={styles.container}>
+       <Text style={styles.header}>Welcome {route.params.Name}</Text>
       <TouchableOpacity style={styles.btn}>
+       
      <Button title="buy product"
     onPress= {()=>navigateToList()}
     />
@@ -29,7 +35,11 @@ export default function Home() {
     onPress= {()=>gotodash()}
     />
     </TouchableOpacity>
-  
+    <TouchableOpacity style={styles.btn}>
+         
+         <Button title="Logout"  onPress= {()=>Logout()}/>  
+         
+         </TouchableOpacity>
     
     </View>
     );
@@ -43,13 +53,14 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     header:{
+      
       color:"#fff",
-      fontSize:25,
+      fontSize:20,
       marginBottom:20,
       borderWidth:1,
       borderRadius:12,
       borderColor:"#9CDCFE",
-      padding:2,  
+      padding:10,  
       textAlign:'center',
     },
     lbl:{

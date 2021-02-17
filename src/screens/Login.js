@@ -1,9 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet,Button, Text, View ,TextInput, TouchableHighlight, TouchableOpacity} from 'react-native';
+import { StyleSheet,Button, Text, View ,TextInput,KeyboardAvoidingView, Platform,TouchableHighlight, TouchableOpacity} from 'react-native';
 import {Component} from 'react';
 import { useNavigation } from '@react-navigation/native';
-
+import  { useState } from 'react';
 
 export default function Login() {
     
@@ -16,35 +16,91 @@ export default function Login() {
     function gotosignup() {
       navigation.navigate("NewCustomer");
   }
+  const [mno, setMob] = useState("")
+  const [pass, setPass] = useState("")
+  
+  const login_data=()=> {
+   
+   
+   
+    fetch("http://localhost:3000/sign-in", {
+      method: "POST",
+      headers:{
+     
+        'Content-Type': 'application/json'
+      },
 
+      body:JSON.stringify({
+      
+        'MobileNumber': mno,
+        'Password': pass
+      })
+
+    })
+      .then(res => res.json())
+      .then(res=>{
+        if(res.success == true){
+          //alert('welcome'+"  "+res.Name)
+          navigation.navigate("Home",{'Name':res.Name});
+          clear()
+        }
+        else{
+          alert(res.message)
+          clear()
+         
+        }
+      
+      });
+    }
+    const clear=()=> 
+    {
+      
+      setMob("");
+      setPass(""); 
+    }
+   
+
+    
   return (
+    <KeyboardAvoidingView
+    behavior={Platform.android === "android" ? "padding" : "height"}
+    style={styles.container}
+  >
+    
         <View style={styles.container} >
         <View style={styles.bor}>
           <Text style={styles.header}>SIGN IN</Text>
-          <Text style={styles.lbl}>Enter Full Name</Text>
-          <TextInput name="fullname" placeholder="Full Name"
+          <Text style={styles.lbl}>Enter Mobile number</Text>
+          <TextInput name="mob" placeholder="Mobile Number" value={mno}
+           onChangeText={text => setMob(text)}
     
           style={styles.txt}
          />
 
         
               <Text style={styles.lbl}>Enter Password</Text>
-          <TextInput placeholder="enter password"  name="pass"
+          <TextInput placeholder="Enter password"  name="pass" value={pass}
+           onChangeText={text =>setPass(text)}
     
           style={styles.txt}
           secureTextEntry={true}
          />
          <TouchableOpacity style={styles.btn}>
          
-         <Button title="Login"  onPress= {()=>navigateToList()}/>  
+         <Button title="Login"  onPress= {()=>login_data()}/>  
          
          </TouchableOpacity>
+        
     
          <TouchableOpacity style={styles.btn}>
          <Button title="Sign-up"  onPress= {()=>gotosignup()}/>  
          </TouchableOpacity>
         </View>
+      
         </View>
+        </KeyboardAvoidingView>
+       
+         
         
   );
 }
@@ -106,5 +162,5 @@ const styles = StyleSheet.create({
       
   });
 
-  
+
 
