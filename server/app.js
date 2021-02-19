@@ -98,7 +98,7 @@ app.post('/sign-in',(req,res)=> {
             }
             else{
                 
-                res.send({'success':false,'message':'Customer not found check your login credential'})
+                res.send({'success':false,'message':'Customer not found, Check your login credentials'})
                 
     
             }
@@ -152,7 +152,7 @@ AdminUser.findByIdAndRemove(req.body.id)
 app.post('/search',(req,res)=>{
     console.log(req.body)
     const ProductName=req.body.ProductName;
-   AddProduct.findOne({'ProductName':req.body.ProductName})
+   AddProduct.findOne({'ProductName':{$regex:req.body.ProductName,$options:"i"},})
    
    .then(data=>{
     if(data){
@@ -170,8 +170,59 @@ app.post('/search',(req,res)=>{
     })
 
 })
+app.post('/forgotpassword',(req,res)=> {
+    console.log(req.body)
+   
+add.findOne({$and:[{'MobileNumber':req.body.MobileNumber},{'Dateofbirth':req.body.Dateofbirth} ] })
+.then(data=>{
+    console.log(data)
+    if(data==null){
+        res.send({'success':false}) 
+    }
+    else
+    {res.send({'success':true })
+   
+}
+})
+    
+})
+app.post('/passUpdate',(req,res)=>{
+    const filter={MobileNumber:req.body.MobileNumber};
+    const update={
+        Password:req.body.Password, 
+    };
+    add.findOneAndUpdate(filter,update)  
+
+    .then(data=>{
+        console.log(data)
+        
+    }).catch(err=>{
+        console.log(err)
+    })
 
 
+})
+app.post('/scan',(req,res)=>{
+    console.log(req.body)
+    const ProductName=req.body.ProductName;
+   AddProduct.findOne({'Barcode':req.body.Barcode})
+   
+   .then(data=>{
+    if(data){
+    res.send({'success':true,'pname':data.ProductName,'price':data.Price,'quan':data.Quantity})
+    }
+    else{
+                
+        res.send({'success':false,'message':'Product not found '})
+        
+
+    }
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+
+})
 
 app.post('/update',(req,res)=> {
     AdminUser.findByIdAndUpdate(req.body.id,{

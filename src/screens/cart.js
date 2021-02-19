@@ -1,73 +1,115 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import * as React from 'react';
+import { StyleSheet,Button, Text, View ,TextInput,KeyboardAvoidingView, Platform,TouchableHighlight, TouchableOpacity} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 
 
-const BASE_URL = 'https://raw.githubusercon tent.com/sdras/sample-vue-shop/master/dist';
+export default function Cart(){
+    const navigation = useNavigation();
 
-const products = [
-  {
-    name: 'Khaki Suede Polish Work Boots',
-    price: 149.99,
-    img: `./Screenshot.png`
-  },
-  {
-    name: 'Camo Fang Backpack Jungle',
-    price: 39.99,
-    img: `${BASE_URL}/jacket1.png`
-  },
-  {
-    name: 'Parka and Quilted Liner Jacket',
-    price: 49.99,
-    img: `${BASE_URL}/jacket2.png`
-  },
-  {
-    name: 'Cotton Black Cap',
-    price: 12.99,
-    img: `${BASE_URL}/hat1.png`
-  },
-];
-
-export default class HomeScreen extends React.Component {
-    render() {
-      return (
-        <ScrollView
-          style={{
-            flexGrow: 0,
-            width: "100%",
-            height: "100%",
-          }}>
-          {
-            products.map((product, index) => {
-              return(
-                <>
-                <View style={styles.row} key={index}>
-                    <View style={styles.col}>
-                      <Product/>
-                    </View>
-                </View>
-                 <View style={styles.row} key={index}>
-                 <View style={styles.col}>
-                   <Product/>
-                 </View>
-             </View>
-                </>
-              )
-            }
-            )
-          }
-        </ScrollView>
+    function navigateToList() {
+        navigation.navigate("cart");
+    }
+    return (
+        <KeyboardAvoidingView
+        behavior={Platform.android === "android" ? "padding" : "height"}
+        style={styles.container}
+      >
+        
+            <View style={styles.container} >
+            <View style={styles.bor}>
+  <Text style={styles.lbl} >Product Name:  </Text>
+  <Text style={styles.lbl}  >Price : Rs. </Text>
+  <Text style={styles.lbl} >Quantity:  </Text>
+  <View style={styles.btn}>
+  <Button title="Remove Product" /> 
+  </View>
+</View>
+            </View>
+            </KeyboardAvoidingView>
+          
+           
+             
+            
       );
     }
-}
+    
+
 
 const styles = StyleSheet.create({
-  row: {
+    container: {
       flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'center',
-  },
-  col: {
-      flex: 1,
-  },
-});
+      backgroundColor: '#192531',
+      alignItems: 'stretch',
+      paddingTop:6,
+      justifyContent: 'flex-start',
+    },
+    header:{
+      color:"#fff",
+      fontSize:25,
+      marginBottom:20,
+      borderWidth:1,
+      borderRadius:12,
+      borderColor:"#9CDCFE",
+      padding:2,  
+      textAlign:'center',
+    },
+    lbl:{
+      color:"#fff",
+      fontSize:18,
+      flexDirection:"row",
+
+    },
+    forg:{
+      
+        height: 30,
+          width :300,
+          fontSize:15,
+          color:"#2196F3",
+           margin:0,
+          textAlign:'center',
+          textDecorationLine:'underline',
+    },
+            
+    txt: {
+      
+      height: 30,
+      width :300,
+      fontSize:18,
+       color:"#fff",
+        borderColor: 'gray',
+        flexDirection:"row",
+         borderWidth: 2,
+         textAlign:'left',
+         borderRadius:10,
+         padding:5,
+         marginBottom:5,
+       
+    },
+    btn: {
+      margin:0,
+      alignItems:'flex-end',
+      
+    },
+    btn1: {
+      marginBottom:10,
+      margin:5,
+      marginTop:5
+    },
+    
+    roww:{
+      flex:0.5,
+       flexDirection:"row"
+      },
+      bor:{
+        borderWidth:1,
+        borderRadius:15,
+        padding:10,
+       // borderColor:"#2196F3",
+        marginBottom:10,
+        backgroundColor:"#2196F3",
+        borderColor:"#2196F3", 
+        
+      }
+      
+  });
