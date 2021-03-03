@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet,Button, Text, View ,TextInput,KeyboardAvoidingView, Platform,TouchableHighlight, TouchableOpacity} from 'react-native';
+import { StyleSheet,Button,Image, Text, View ,TextInput,KeyboardAvoidingView, Platform,TouchableHighlight, TouchableOpacity} from 'react-native';
 import {Component} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import  { useState } from 'react';
-
+import renderIf from 'render-if';
+import { AntDesign } from '@expo/vector-icons';
 export default function Login() {
     
     const navigation = useNavigation();
@@ -12,18 +13,32 @@ export default function Login() {
     function navigateToList() {
         navigation.navigate("Home");
     }
-    
+   
     function gotosignup() {
-      navigation.navigate("NewCustomer");
+      navigation.navigate("Sign Up");
   }
+  function forget() {
+      navigation.navigate("Forget");
+  }
+  
   const [mno, setMob] = useState("")
   const [pass, setPass] = useState("")
+  const [toggle, setToggle] = useState(false)
+   const validation=()=>
+   {
+    if ((!mno=="") && (!pass=="")){
+      login_data()
+    }else{
+      alert("enter mobile number and password")
+    }
+   }
+
   
   const login_data=()=> {
    
+  setToggle(true)
    
-   
-    fetch("http://localhost:3000/sign-in", {
+    fetch("http://aa29cf7dceb5.ngrok.io/sign-in", {
       method: "POST",
       headers:{
      
@@ -31,7 +46,7 @@ export default function Login() {
       },
 
       body:JSON.stringify({
-      
+         
         'MobileNumber': mno,
         'Password': pass
       })
@@ -41,15 +56,17 @@ export default function Login() {
       .then(res=>{
         if(res.success == true){
           //alert('welcome'+"  "+res.Name)
-          navigation.navigate("Home",{'Name':res.Name});
+          navigation.navigate("Home",{'Name':res.Name,'phone':res.MobileNumber});
+          
+
           clear()
         }
         else{
           alert(res.message)
-          clear()
+          
          
         }
-      
+      setToggle(false)
       });
     }
     const clear=()=> 
@@ -69,9 +86,12 @@ export default function Login() {
     
         <View style={styles.container} >
         <View style={styles.bor}>
-          <Text style={styles.header}>SIGN IN</Text>
-          <Text style={styles.lbl}>Enter Mobile number</Text>
-          <TextInput name="mob" placeholder="Mobile Number" value={mno}
+       <View style={styles.header}>
+       <AntDesign name="user" size={30} color="#2196F3" marginTop={10} />
+          <Text style={styles.header1}  >SIGN IN</Text>
+       </View>
+          <Text style={styles.lbl}  >Enter Mobile number</Text>
+          <TextInput keyboardType='numeric' name="mob" placeholder="Mobile Number" placeholderTextColor='#2196F3' value={mno}
            onChangeText={text => setMob(text)}
     
           style={styles.txt}
@@ -79,26 +99,30 @@ export default function Login() {
 
         
               <Text style={styles.lbl}>Enter Password</Text>
-          <TextInput placeholder="Enter password"  name="pass" value={pass}
+          <TextInput placeholder="Enter password"  name="pass" placeholderTextColor='#2196F3' value={pass}
            onChangeText={text =>setPass(text)}
     
           style={styles.txt}
           secureTextEntry={true}
          />
-         <TouchableOpacity style={styles.btn}>
-         
-         <Button title="Login"  onPress= {()=>login_data()}/>  
-         
+         <TouchableOpacity style={styles.btn1}  onPress= {()=>validation()}>
+           {renderIf(!toggle)( <AntDesign name="login" size={20} color="black" style={{marginVertical:5}} />)}
+           {renderIf(toggle)( <Image style={{width:40,height:30}} source={require('../../assets/loading2.gif')}/>)}
+   
+         {/* <Button title="search"  onPress= {()=>Search()}/>   */}
          </TouchableOpacity>
-        
+       
     
-         <TouchableOpacity style={styles.btn}>
-         <Button title="Sign-up"  onPress= {()=>gotosignup()}/>  
+         <TouchableOpacity onPress= {()=>gotosignup()} style={styles.btn}>
+         <Text style={styles.forg}>Dont have an Account ?, Create One..</Text> 
          </TouchableOpacity>
+         <TouchableOpacity>
+          <Text style={styles.forg} onPress={()=>forget()}>Forgot Password</Text></TouchableOpacity>
         </View>
       
         </View>
         </KeyboardAvoidingView>
+      
        
          
         
@@ -120,8 +144,14 @@ const styles = StyleSheet.create({
       borderWidth:1,
       borderRadius:12,
       borderColor:"#9CDCFE",
-      padding:2,  
+      padding:2, 
+      alignItems:'center' ,
       textAlign:'center',
+    },
+    header1:{
+      textAlign:'auto',
+      color:"#fff",
+      fontSize:20
     },
     lbl:{
       color:"#fff",
@@ -129,6 +159,17 @@ const styles = StyleSheet.create({
       flexDirection:"row",
 
     },
+    forg:{
+      
+        height: 30,
+          width :300,
+          fontSize:15,
+         color:"#2196F3",
+           margin:0,
+          textAlign:'center',
+          textDecorationLine:'underline',
+    },
+            
     txt: {
       
       height: 30,
@@ -139,14 +180,27 @@ const styles = StyleSheet.create({
         flexDirection:"row",
          borderWidth: 2,
          textAlign:'left',
-         borderRadius:10,
+         borderRadius:50,
          padding:5,
          marginBottom:5,
        
     },
     btn: {
-      margin:5,
+      margin:0,
+      
     },
+    btn1: {
+      marginBottom:5,
+      margin:30,
+      marginTop:5,
+      marginLeft:20,
+      backfaceVisibility:'visible',
+      alignItems:'center',
+      borderRadius:50,
+      backgroundColor:"#2196F3",
+      width:255,
+    },
+    
     roww:{
       flex:0.5,
        flexDirection:"row"

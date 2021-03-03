@@ -20,7 +20,7 @@ export default function Forget() {
     }
     
     function gotologin() {
-      navigation.navigate("Login");
+      navigation.goBack()
   }
   // const [mno, setMob] = useState("")
   // const [pass, setPass] = useState("")
@@ -28,7 +28,7 @@ export default function Forget() {
    const login_data=()=> {
   
    
-    fetch("http://9510d85ec600.ngrok.io/forgotpassword", {
+    fetch("http://aa29cf7dceb5.ngrok.io/forgotpassword", {
       method: "POST",
       headers:{
      
@@ -61,7 +61,7 @@ export default function Forget() {
      
   
    
-        fetch("http://9510d85ec600.ngrok.io/passUpdate", {
+        fetch("http://aa29cf7dceb5.ngrok.io/passUpdate", {
           method: "POST",
           headers:{
          
@@ -121,11 +121,11 @@ alert("Password  too short")
         <View style={styles.container} >
         <View style={styles.bor}>
         
-          <Text style={styles.header}>FORGRT PASSWORD</Text>
+          <Text style={styles.header}>FORGOT PASSWORD</Text>
           {renderIf(flag)(
             <>
           <Text style={styles.lbl}>Enter Mobile number</Text>
-          <TextInput name="mno" placeholder="Mobile Number" value={mno}
+          <TextInput  keyboardType='numeric' name="mno" placeholder="Mobile Number"  placeholderTextColor='#2196F3'value={mno}
            onChangeText={text => setMno(text)}
     
           style={styles.txt}
@@ -133,7 +133,7 @@ alert("Password  too short")
 
         
               <Text style={styles.lbl}>Date Of Birth</Text>
-        <TextInput placeholder="DD/MM/YYYY"  name="dob"  value={dob}
+        <TextInput placeholder="DD/MM/YYYY"  name="dob"  placeholderTextColor='#2196F3' value={dob}
           onChangeText={text => setDob(text)}
          style={styles.txt}
         />

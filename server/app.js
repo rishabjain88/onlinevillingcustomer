@@ -6,6 +6,7 @@ const cors = require("cors")
 require('./AdminUser')
 require('./user')
 require('./ProductSchema')
+require('./SalesSchema')
 require('bcryptjs');
 app.use(cors())
 app.use(bodyParser.json())
@@ -14,6 +15,7 @@ app.use(express.json())
 const AdminUser= mongoose.model("admin")
 const AddProduct =mongoose.model("product")
 const add =mongoose.model("Customer")
+const Sales =mongoose.model("Sales")
 const mongoUri="mongodb+srv://rishi:12345@cluster0.00f3y.mongodb.net/OnlineBilling";
 mongoose.connect(mongoUri,{
     useNewUrlParser:true,
@@ -21,7 +23,7 @@ mongoose.connect(mongoUri,{
 })
 app.use("/", require("./noteRoute"))
 mongoose.connection.on("connected",()=> {
-    console.log("connected to mongo DB!!!")
+    console.log("connected to mongoose !!!")
 })
 
 // app.get('/login',(req,res)=>{
@@ -83,6 +85,51 @@ app.post('/send-data',(req,res)=> {
 // res.send("posted")
 })
 
+app.post('/savebill',(req,res)=> {
+    console.log(req.body)
+   
+            res.send({'success':true})
+    const sales= new Sales({
+        CustomerName:req.body.CustomerName,
+        MobileNumber:req.body.MobileNumber,
+        Date:req.body.Date,
+        TotalPayment:req.body.TotalPayment,
+        Products:req.body.Products
+           
+        
+    })  
+    sales.save()
+    .then(data=>{
+        console.log(data)
+        
+    }).catch(err=>{
+        console.log(err)
+    })
+ 
+})
+
+
+app.post('/History',(req,res)=>{
+    console.log(req.body)
+    //const ProductName=req.body.ProductName;
+Sales.find({'MobileNumber':req.body.MobileNumber})
+   .then(data=>{
+    if(data){
+        res.send(data);
+
+
+    }
+    else{
+                
+       res.send({'message':'You havent did any shopping yet!'})
+    
+    }
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+
+})
 app.post('/sign-in',(req,res)=> {
     console.log(req.body)
        var MobileNumber=req.body.MobileNumber;
@@ -93,7 +140,7 @@ app.post('/sign-in',(req,res)=> {
             console.log(data)
             if(data){
         
-                res.send({'success':true,'Name':data.Name})
+                res.send({'success':true,'Name':data.Name,'MobileNumber':data.MobileNumber})
 
             }
             else{
@@ -151,18 +198,19 @@ AdminUser.findByIdAndRemove(req.body.id)
 })
 app.post('/search',(req,res)=>{
     console.log(req.body)
-    const ProductName=req.body.ProductName;
-   AddProduct.findOne({'ProductName':{$regex:req.body.ProductName,$options:"i"},})
-   
+    //const ProductName=req.body.ProductName;
+AddProduct.find({'ProductName':{$regex:req.body.ProductName,$options:"i"},})
    .then(data=>{
     if(data){
-    res.send({'success':true,'pname':data.ProductName,'price':data.Price,'quan':data.Quantity})
+        res.send(data);
+
+        
+    //res.end();
     }
     else{
                 
-        res.send({'success':false,'message':'Product not found '})
-        
-
+       res.send({'message':'s'})
+    
     }
     })
     .catch(err=>{
